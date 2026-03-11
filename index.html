@@ -3,174 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地震學導論筆記 - 第一章</title>
+    <title>地震學大師互動教室 | 深度理論專業版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
-        body {
-            font-family: "Microsoft JhengHei", sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h1, h2, h3 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        .content-section {
-            background-color: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .image-container {
-            text-align: center;
-            margin: 30px 0;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #fff;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .image-caption {
-            text-align: left;
-            margin-top: 15px;
-            font-size: 0.95em;
-            color: #555;
-            background-color: #f0f7fd;
-            padding: 15px;
-            border-left: 5px solid #3498db;
-        }
-        .highlight {
-            font-weight: bold;
-            color: #e67e22;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-        .risk-alert {
-            color: #c0392b;
-            font-weight: bold;
-        }
+        body { font-family: 'Noto Sans TC', sans-serif; scroll-behavior: smooth; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* 地球掃描動畫 */
+        .scan-container { position: relative; width: 240px; height: 240px; margin: 0 auto; }
+        .earth-circle { fill: #1e293b; stroke: #334155; stroke-width: 2; }
+        .scan-line { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #60a5fa, transparent); position: absolute; top: 0; animation: scanMove 3s infinite ease-in-out; }
+        @keyframes scanMove { 0%, 100% { top: 10%; opacity: 0; } 50% { top: 90%; opacity: 1; } }
+        .inner-core { fill: #f87171; filter: blur(4px); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+
+        /* P/S Wave 動畫 */
+        .wave-container { overflow: hidden; position: relative; width: 100%; height: 80px; background: #1e293b; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid #334155; display: flex; align-items: center;}
+        .p-wave-dots { display: flex; width: 200%; animation: pWaveAnim 3s infinite linear; }
+        .p-dot { width: 6px; height: 40px; background-color: #60a5fa; margin-right: 15px; border-radius: 3px; }
+        .p-dot.compressed { margin-right: 4px; background-color: #f87171; }
+        @keyframes pWaveAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .s-wave-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: sWaveAnim 4s linear infinite; }
+        @keyframes sWaveAnim { to { stroke-dashoffset: 0; } }
+
+        .topic-content { transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
+        .topic-content.open { max-height: 6000px; opacity: 1; padding-top: 1.5rem; }
+        .quiz-answer { display: none; }
+        .quiz-answer.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .nav-link.active { color: #60a5fa; border-left-color: #60a5fa; background: rgba(51, 65, 85, 0.5); }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-200 antialiased selection:bg-blue-500/30 selection:text-blue-200 flex">
 
-    <h1>地震學導論：模型、社會與不確定性</h1>
-
-    <div class="content-section">
-        <h2>1. 地震學中的模型化 (Modeling)</h2>
-        <p>地震學家透過簡化模型來描述複雜的地球過程。然而，模型與現實之間總存在落差。</p>
-
-        <div class="image-container">
-            <img src="https://github.com/minh891711/seismology_ch1/blob/main/photos/1.1-3.png?raw=true" alt="真實地球與數學模型對比">
-            <div class="image-caption">
-                <h3>核心概念：模型化過程與落差</h3>
-                <p><strong>1. 真實地球 vs. 數學模型：</strong><br>
-                左側代表真實自然界，地殼構造複雜且具異質性；右側則是為了運算建立的簡化模型（如假設為均質水平層）。模型是現實的「抽象化」，以換取計算的可行性。</p>
-                
-                <p><strong>2. 誤差分類：</strong><br>
-                <ul>
-                    <li><span class="highlight">隨機誤差 (Random Errors)：</span>來自觀測數據本身（如儀器雜訊），可透過多次觀測取平均值降低。</li>
-                    <li><span class="highlight">系統誤差 (Systematic Errors)：</span>源自模型與現實的本質差異（如用水平模型跑傾斜地層）。這屬於「認識論不確定性」，無法透過增加數據消除，必須修正模型。</li>
-                </ul></p>
-                
-                <p class="risk-alert">⚠️ 反演風險：若過度相信簡化模型，可能將「模型的局限性」誤認為是「地球的真實特徵」。</p>
-            </div>
+    <aside class="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-slate-950 border-r border-slate-800 p-6 overflow-y-auto no-scrollbar">
+        <div class="mb-8">
+            <h2 class="text-xl font-black text-slate-100">課程目錄</h2>
+            <p class="text-xs text-slate-500 uppercase tracking-widest mt-1">Seismology Master</p>
         </div>
+        <nav class="space-y-1 text-sm">
+            <a href="#topic-0" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">1. 定義與彈性回跳理論</a>
+            <a href="#topic-1" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">2. 地球內部結構</a>
+            <a href="#topic-2" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">3. 物理特性與震相</a>
+            <a href="#topic-3" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">4. 正向與反演問題</a>
+            <a href="#topic-4" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">5. 科學進展與典範轉移</a>
+            <a href="#topic-5" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">6. 危害與風險評估</a>
+            <a href="#topic-6" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">7. 工程抗震與共振</a>
+            <a href="#topic-7" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">8. 次生災害：液化與海嘯</a>
+            <a href="#topic-8" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">9. 預報與預警的差異</a>
+            <a href="#topic-9" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">10. 核武監測科學</a>
+        </nav>
+    </aside>
+
+    <div class="flex-1 min-w-0">
+        <header class="bg-slate-950/50 backdrop-blur-md sticky top-0 z-10 border-b border-slate-800 py-6 px-8 flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-100">地震學大師互動教室</h1>
+            <span class="text-xs bg-blue-900/40 text-blue-400 border border-blue-800 px-3 py-1 rounded-full font-bold">CHAPTER 1: ADVANCED</span>
+        </header>
+
+        <main class="max-w-4xl mx-auto p-6 md:p-12 space-y-12">
+            <div id="topics-container" class="space-y-6"></div>
+        </main>
     </div>
 
-    <div class="content-section">
-        <h2>2. 正向問題與反演問題 (Forward vs. Inverse Problems)</h2>
-        <p>這是地震學中最核心的數學觀念，決定了我們如何從地震圖回推地底構造。</p>
+    <script>
+        const topics = [
+            {
+                title: "1. 定義與彈性回跳理論",
+                subtitle: "Definition and Elastic Rebound Theory",
+                q: "地震學的研究核心是什麼？",
+                explain: "地震學不僅是研究震動，更關注能量的累積與釋放。H.F. Reid 提出的「彈性回跳理論」解釋了構造地震的成因。此外，了解地震波如何從震源傳遞到接收器是所有研究的起點。",
+                visual: `
+                <div class="mt-8 space-y-6 bg-slate-900 border border-slate-700 rounded-xl p-6 md:p-8">
+                    <h4 class="text-xl font-bold text-slate-100 mb-4">核心模型：地震圖與其組成要素</h4>
+                    <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-1.png" alt="Seismogram Elements" class="w-full max-w-2xl mx-auto rounded-lg shadow-2xl border border-slate-600 bg-white p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm mt-6">
+                        <div class="p-4 bg-slate-800 rounded-lg">
+                            <b class="text-blue-400 block mb-2">1. 震源 (Source)</b>
+                            能量釋放的起始點。決定了初始波形的形狀、振幅與頻率特徵（如斷層錯動或人工爆震）。
+                        </div>
+                        <div class="p-4 bg-slate-800 rounded-lg">
+                            <b class="text-yellow-400 block mb-2">2. 介質 (Medium)</b>
+                            地震波傳播的路徑。介質就像濾波器，岩石的密度與彈性係數會影響波速、產生衰減與散射。
+                        </div>
+                        <div class="p-4 bg-slate-800 rounded-lg">
+                            <b class="text-red-400 block mb-2">3. 接收器 (Receiver)</b>
+                            地震儀記錄的訊號。透過分析「走時」推算構造，分析「波形」推算震源性質。
+                        </div>
+                    </div>
+                </div>`,
+                quiz: "「彈性回跳」解釋了地震的週期性，位移越大代表什麼？",
+                ans: "代表釋放的「地震矩 ($M_0$)」越高，亦即釋出的能量越驚人。"
+            },
+            {
+                title: "2. 地球內部結構的探索",
+                subtitle: "Exploring the Earth's Interior",
+                q: "如何利用彈性波特性發現「液態外核」？",
+                explain: "地震波提供了地球內部的「X 光」影像。科學家觀察到 P 波（縱波）能穿過外核但速度陡降並產生折射，而 S 波（剪力波）則完全消失，證實了外核為流體性質。",
+                visual: ``,
+                quiz: "既然 S 波不能穿過外核，地核中心卻有固態內核，我們是如何得知的？",
+                ans: "科學家發現 P 波進入內核時速度再次增加，且內核的邊界會反射出微弱的 PKiKP 波。"
+            },
+            {
+                title: "3. 物理特性與震相",
+                subtitle: "Physical Properties and Seismic Phases",
+                q: "為什麼地震圖上波的抵達順序總是一定的？",
+                explain: "P 波（Primary）是壓縮波，波速最快（在花崗岩中約 6km/s）；S 波（Secondary）是剪切波，速度約 P 波的 60%。兩者抵達的時間差 ($S-P$ time) 是定位震央的基礎。",
+                visual: `<div class="space-y-4 mt-6"><div class="wave-container"><div class="p-wave-dots"><div class="p-dot"></div><div class="p-dot compressed"></div><div class="p-dot"></div><div class="p-dot compressed"></div><div class="p-dot"></div></div></div><div class="wave-container bg-red-950/20"><svg width="100%" height="100%" viewBox="0 0 500 80" preserveAspectRatio="none"><path class="s-wave-path" d="M0,40 Q25,10 50,40 T100,40 T150,40 T200,40 T250,40 T300,40" stroke="#f87171" stroke-width="4" fill="none" /></svg></div></div>`,
+                quiz: "為什麼在震央附近，人會先感覺到「上下彈」，然後才是「左右晃」？",
+                ans: "因為最先到達的 P 波是縱波，表現為垂直震動；隨後到達的 S 波是橫波，通常引起水平位移。"
+            },
+            {
+                title: "4. 正向與反演問題",
+                subtitle: "Forward vs Inverse Problems",
+                q: "如何從雜亂的波形中「解碼」地底秘密？",
+                explain: "正向問題是透過數學模型預測數據；反演問題則是地震學的核心挑戰：根據觀測數據推算震源參數與地底構造。然而，反演常面臨「非唯一性」，即多種模型可能解釋同一數據。",
+                quiz: "在反演中，數據中的「噪訊 (Noise)」會造成什麼影響？",
+                ans: "噪訊會使解不穩定，導致我們無法精確分辨細微的地殼層次差異。"
+            },
+            {
+                title: "5. 科學進展與典範轉移",
+                subtitle: "Paradigm Shifts in Seismology",
+                q: "地震學如何促成板塊構造學說的確立？",
+                explain: "1960年代以前，大陸漂移學說仍具爭議。隨著全球標準地震測站網 (WWSSN) 的建立，科學家精確繪製出中洋脊與海溝的地震帶分佈，這才讓地質學發生了「典範轉移」。",
+                quiz: "誰是早期反對大陸漂移的最著名地震學家？",
+                ans: "Harold Jeffreys，他當時認為地球物質過於堅硬，不可能發生大陸規模的水平運動。"
+            },
+            {
+                title: "6. 地震危害與風險評估",
+                subtitle: "Hazards vs Risks: Model Sensitivity",
+                q: "為何不同專家對同一地區的減災規劃會有巨大差異？",
+                explain: "危害 (Hazard) 是自然的威脅，而風險 (Risk) 則包含社會經濟損害。地震危害分析高度依賴於對「最大潛在規模」與「地表運動模型」的假設。",
+                visual: `
+                <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-6 md:p-8">
+                    <h4 class="text-xl font-bold text-slate-100 mb-6">模型敏感度測試：新馬德里地震帶 (NMSZ) 案例</h4>
+                    <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1-2.14.png" alt="Seismic Hazard Sensitivity" class="w-full max-w-2xl mx-auto rounded-lg shadow-xl border border-slate-600 bg-white p-2">
+                    <div class="space-y-4 mt-6 text-sm">
+                        <p class="text-slate-300"><b class="text-blue-400">1. 規模 ($M_{max}$) 的影響：</b> 比較上排 ($M=8$) 與下排 ($M=7$)，可見當假設規模下降時，高加速度區域顯著縮小。這說明對極端事件規模的判斷決定了基礎建設的成本。</p>
+                        <p class="text-slate-300"><b class="text-blue-400">2. 衰減模型的選擇：</b> 左列 (Frankel) 與右列 (Toro) 展現了截然不同的衰減模式。科學家對波如何在特定地殼中消失的認知不一，會導致預測結果出現數倍差距。</p>
+                        <p class="text-slate-300 italic">單位標註：圖中深色區代表峰值加速度 (PGA) 超過 $1.0g$，足以摧毀非抗震結構。</p>
+                    </div>
+                </div>`,
+                quiz: "如果政府決定採用最保守（右上角）的模型，會發生什麼後果？",
+                ans: "建築防震係數要求會極高，導致建設成本劇增，但也提供了最大程度的安全性。"
+            },
+            {
+                title: "7. 工程地震學與抗震設計",
+                subtitle: "Resonance and Engineering",
+                q: "為什麼在相同震區，某些建築倒塌而有些卻屹立不搖？",
+                explain: "這涉及「共振」現象。每個建物都有自然振動週期，高樓週期長，矮房週期短。若地震波主導頻率與建物週期重合，震幅會被放大數倍。工程師利用阻尼器來消耗這些動能。",
+                quiz: "通常軟弱地層（如台北盆地）會放大哪種類型的週期？",
+                ans: "長週期。這對高樓大廈（同樣具長週期特性）的影響較為嚴重。"
+            },
+            {
+                title: "8. 地震引發的次生災害",
+                subtitle: "Liquefaction and Tsunamis",
+                q: "什麼地質環境最容易發生「土壤液化」？",
+                explain: "疏鬆且飽和的沙土。強震發生時，水壓急遽升高，使沙粒懸浮，土壤瞬間失去抗剪強度，造成建築下沉或噴砂。而海嘯則是因海床垂直位移推動整層海水所致。",
+                quiz: "海嘯在深海與近岸的表現有何不同？",
+                ans: "在深海速度極快且波高極低（難以發現）；在近岸受地形擠壓，速度變慢但波高急劇攀升。"
+            },
+            {
+                title: "9. 預報與預警的差異",
+                subtitle: "Forecasting vs Early Warning",
+                q: "我們能「預知」地震嗎？",
+                explain: "目前人類僅能做到「機率預報」(Forecasting)，無法精確預測確切時間地點。然而，「預警」(Early Warning) 是利用 P 波先抵達測站的資訊，透過電訊傳播（光速）搶在慢速 S 波（強震）到達城市前發出通知。",
+                quiz: "地震預警的「盲區」是指什麼？",
+                ans: "指靠近震央的地區，因為 S 波與 P 波到達的時間差太短，當系統發出警報時，強震已經抵達。"
+            },
+            {
+                title: "10. 核武監測科學",
+                subtitle: "Nuclear Test Monitoring and Wave Physics",
+                q: "如何分辨地下震動是來自大自然還是核試爆？",
+                explain: "核爆是集中一點向外膨脹的「純壓縮源」，會產生極大的 P 波但 S 波極弱。科學家使用 $m_b : M_s$ 判別法來區分兩者。這是維護全球禁止核試驗條約的核心技術。",
+                visual: `
+                <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-6 md:p-8">
+                    <h4 class="text-xl font-bold text-slate-100 mb-6">體波 ($m_b$) vs 表面波 ($M_s$) 判別圖</h4>
+                    <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-2.png" alt="Nuclear Monitoring Graph" class="w-full max-w-lg mx-auto rounded-lg shadow-xl border border-slate-600 bg-white p-4">
+                    <div class="space-y-4 mt-6 text-sm text-slate-300">
+                        <p><b class="text-emerald-400">數據群分佈：</b> 
+                           圖中上方群體為<b class="text-red-400">內華達核爆</b>，下方群體為<b class="text-blue-400">美國西部地震</b>。
+                        </p>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li><b class="text-white">核子試爆（點源）：</b> 瞬間產生極大均勻擴張壓力，激發極強的 P波 ($m_b$)，但剪力波與表面波 ($M_s$) 非常微弱。</li>
+                            <li><b class="text-white">自然地震（剪切錯動）：</b> 斷層大面積撕裂，產生大量剪力波與強大的表面波。</li>
+                        </ul>
+                        <p class="pt-2 border-t border-slate-700 italic text-slate-400">
+                           這張圖表讓科學家能在不靠近現場的情況下，判別某個地下震動是否為秘密核武測試。
+                        </p>
+                    </div>
+                </div>`,
+                quiz: "如果一個震動事件在圖表中位於 $m_b=6.0$ 且 $M_s=4.0$ 的位置，它是什麼？",
+                ans: "高度懷疑是地下核武試爆，因為體波規模遠大於其產生的表面波規模。"
+            }
+        ];
 
-        <div class="image-container">
-            <img src="https://github.com/minh891711/seismology_ch1/blob/main/photos/1.1-4.png?raw=true" alt="正向與反演問題流程圖">
-            <div class="image-caption">
-                <h3>路徑分析：</h3>
-                <p><strong>1. 正向問題 (Forward Problem)：</strong>模型 → 數據。已知震源與構造，預測地震波形。這是一個理論預測過程。</p>
-                <p><strong>2. 反演問題 (Inverse Problem)：</strong>數據 → 模型。這是「偵探辦案」的過程，從觀測到的地震圖推算震源位置與地下岩層性質。</p>
-                
-                <p><strong>反演面臨的挑戰：</strong><br>
-                <ul>
-                    <li><span class="highlight">非唯一性 (Non-uniqueness)：</span>不同的模型可能產生相同的數據，難以斷定何者為真。</li>
-                    <li><span class="highlight">數據局限性：</span>地震儀分布不均與雜訊影響精度。</li>
-                </ul></p>
-            </div>
-        </div>
-    </div>
+        const container = document.getElementById('topics-container');
 
-    <div class="content-section">
-        <h2>3. 區域地質對震動衰減的影響</h2>
-        <p>不同性質的岩石傳遞能量效率不同，這直接影響了災害範圍的評估。</p>
+        topics.forEach((topic, index) => {
+            const topicId = `topic-${index}`;
+            container.innerHTML += `
+                <div id="${topicId}" class="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 scroll-mt-24">
+                    <div class="px-8 py-6 bg-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-700/50 transition-all" onclick="toggleAccordion('${topicId}')">
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-black text-slate-100">${topic.title}</h2>
+                            <p class="text-xs md:text-sm text-slate-400 font-medium">${topic.subtitle}</p>
+                        </div>
+                        <span id="icon-${topicId}" class="text-2xl text-slate-500 transition-transform">+</span>
+                    </div>
+                    <div id="content-${topicId}" class="topic-content px-8 pb-8">
+                        <div class="border-t border-slate-700 pt-6">
+                            <h3 class="text-lg font-bold text-blue-400 mb-4">核心探討：${topic.q}</h3>
+                            <p class="text-slate-300 leading-relaxed">${topic.explain}</p>
+                            ${topic.visual ? topic.visual : ''}
+                            <div class="mt-8 bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                                <p class="text-xs font-bold text-slate-400 mb-2 uppercase">互動小測試</p>
+                                <p class="text-slate-200 mb-4 font-medium">${topic.quiz}</p>
+                                <button onclick="toggleAnswer('ans-${topicId}')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 px-6 rounded-full transition-all shadow-lg">顯示解答</button>
+                                <div id="ans-${topicId}" class="quiz-answer mt-4 p-4 bg-blue-900/20 rounded-lg text-blue-300 border border-blue-900/30 text-sm">
+                                    <span class="font-bold">大師開講：</span>${topic.ans}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
 
-        <div class="image-container">
-            <img src="https://github.com/minh891711/seismology_ch1/blob/main/photos/1.2-5.png?raw=true" alt="美國東西部衰減曲線對比">
-            <div class="image-caption">
-                <h3>案例分析：美國東部 vs. 西部</h3>
-                <p><strong>1. 衰減速度差異：</strong><br>
-                西部（虛線）因地殼較破碎且地溫高，能量隨距離迅速下降；東部（實線）地殼古老堅硬，能量傳導極佳。</p>
-                
-                <p><strong>2. 跨級別觀察：</strong><br>
-                數據顯示「東部 $M=6$ 的地震，其地面運動強度與範圍竟與西部 $M=7$ 相當」。這解釋了為何東部地震的感震範圍往往比西部大上好幾倍。</p>
-            </div>
-        </div>
-    </div>
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(45deg)';
+            }
+        }
 
-    <div class="content-section">
-        <h2>4. 地震危害與建築脆弱度</h2>
-        <p>風險（Risk）受人類行為影響，可透過抗震設計顯著降低。</p>
+        function toggleAnswer(id) {
+            document.getElementById(id).classList.toggle('show');
+        }
 
-        <div class="image-container">
-            <img src="https://github.com/minh891711/seismology_ch1/blob/main/photos/1.2-6.png?raw=true" alt="地震烈度與建築倒塌率">
-            <div class="image-caption">
-                <h3>建築結構脆弱度分析</h3>
-                <table>
-                    <tr>
-                        <th>結構類型</th>
-                        <th>臨界震度</th>
-                        <th>表現分析</th>
-                    </tr>
-                    <tr>
-                        <td>土坯與弱磚石</td>
-                        <td>VI 級</td>
-                        <td>最脆弱，震度 VIII 時約 50% 倒塌。</td>
-                    </tr>
-                    <tr>
-                        <td>木結構</td>
-                        <td>VIII 級</td>
-                        <td>具韌性，表現優於傳統磚石。</td>
-                    </tr>
-                    <tr>
-                        <td>抗震鋼筋混凝土</td>
-                        <td>VIII 級後半</td>
-                        <td>最安全。即使震度 X，倒塌率仍低於 10%。</td>
-                    </tr>
-                </table>
-                <p><strong>結論：</strong>「一般混凝土」與「抗震混凝土」在強震下的差距顯著，說明耐震法規與設計（如增加箍筋密度）能大幅提高生存機率。</p>
-            </div>
-        </div>
-    </div>
-
+        // 初始化開展第一個章節
+        toggleAccordion('topic-0');
+    </script>
 </body>
 </html>
