@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學大師互動教室 | 探索大地的奧秘</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        
+        /* P波與S波的動畫設計 */
+        .wave-container { overflow: hidden; position: relative; width: 100%; height: 80px; background: #f8fafc; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid #e2e8f0; display: flex; align-items: center;}
+        
+        /* P波 (壓縮波) 動畫 */
+        .p-wave-dots { display: flex; width: 200%; animation: pWaveAnim 3s infinite linear; }
+        .p-dot { width: 6px; height: 40px; background-color: #3b82f6; margin-right: 15px; border-radius: 3px; }
+        .p-dot.compressed { margin-right: 4px; background-color: #ef4444; }
+        
+        @keyframes pWaveAnim {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
+        /* S波 (剪力波) 動畫 */
+        .s-wave-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: sWaveAnim 4s linear infinite;
+        }
+        @keyframes sWaveAnim {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 互動卡片動畫 */
+        .topic-content { transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
+        .topic-content.open { max-height: 2000px; opacity: 1; padding-top: 1.5rem; }
+        
+        /* 隱藏解答 */
+        .quiz-answer { display: none; }
+        .quiz-answer.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased selection:bg-blue-200 selection:text-blue-900">
+
+    <!-- 頁首 -->
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-lg py-12 px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">🌍 地震學大師互動教室</h1>
+        <p class="text-lg md:text-xl font-light max-w-2xl mx-auto opacity-90">跟我一起，把複雜的物理現象變成生動的生活故事！揭開地球內部結構、地震波與防災的科學奧秘。</p>
+        
+        <div class="mt-8 bg-white/20 backdrop-blur-sm rounded-xl p-4 max-w-3xl mx-auto inline-block text-left border border-white/30">
+            <p class="text-sm md:text-base font-medium">
+                💡 <span class="text-yellow-300 font-bold">大師冷知識：</span> 你知道嗎？全球每年大約會發生 <span class="font-bold text-xl">50萬次</span> 可偵測的地震！其中約有 10 萬次能被人類感覺到，但只有大約 100 次會造成損害。地球其實天天都在微微顫抖呢！
+            </p>
+        </div>
+    </header>
+
+    <!-- 主內容區：手風琴選單 -->
+    <main class="max-w-4xl mx-auto p-4 md:p-8 space-y-6 -mt-6">
+
+        <!-- 模版函數將透過 JS 渲染以下內容 -->
+        <div id="topics-container"></div>
+
+    </main>
+
+    <footer class="text-center py-8 text-slate-500 text-sm">
+        <p>👨‍🏫 地震學大師為你量身打造 | 保持好奇，繼續探索科學！</p>
+    </footer>
+
+    <script>
+        const topics = [
+            {
+                title: "1. 地震學的定義與研究範疇",
+                subtitle: "Definition and Scope of Seismology",
+                icon: "📖",
+                q: "地震圖如何同時包含關於「震源」性質與「傳播介質」物理特性的資訊？",
+                explain: "想像一下，醫生用聽診器聽你的心跳。心臟的跳動就是「震源」，而聲音穿過你的肌肉和骨骼（傳播介質），最後傳到醫生的耳朵（地震儀）。從這個心跳聲中，醫生不僅能知道你的心臟跳得有多用力（震源資訊），還能透過聲音的變化猜出你的肺部有沒有積水（介質特性）。地震波也是一樣的道理！",
+                quiz: "如果地震儀畫出的波形突然變得跟平常不一樣，你覺得是地底下的岩石斷裂方式（震源）改變了，還是波穿過的岩石種類（介質）改變了呢？",
+                ans: "兩者都有可能喔！所以地震學家就像偵探，要比對很多台不同地點的地震儀數據，才能揪出真正的答案。"
+            },
+            {
+                title: "2. 地球內部結構的探索",
+                subtitle: "Exploring the Earth's Interior",
+                icon: "🍉",
+                q: "我們挖地洞最深才 13 公里，怎麼知道地球中心長什麼樣子？",
+                explain: "你挑西瓜的時候會不會拍一拍聽聲音？如果聲音很清脆，代表裡面很結實；如果聲音悶悶的，可能過熟了。地震學家就是用「地震波」來拍打地球這顆大西瓜！<br><br>我們發現，有一種叫做「S波」的地震波，它絕對無法穿透液體。當地震波傳到地底約 2900 公里深的時候，S波突然消失了！這就證明了地球內部有一個液態的層級，我們稱之為「液態外核」。",
+                visual: `
+                <div class="flex justify-center my-4">
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="90" fill="#475569" /> <!-- 地殼/地函 -->
+                        <circle cx="100" cy="100" r="50" fill="#f59e0b" /> <!-- 液態外核 -->
+                        <circle cx="100" cy="100" r="20" fill="#ef4444" /> <!-- 固態內核 -->
+                        <path d="M 10 100 Q 50 20 100 10" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="4,4"/>
+                        <text x="150" y="30" fill="white" font-size="12">地震波折射</text>
+                    </svg>
+                </div>
+                `,
+                quiz: "既然S波不能穿透液態外核，那你猜猜看，在地球的另一端（震央的對面）測得到S波嗎？",
+                ans: "測不到！地球的另一端會有一個「S波陰影區」，這就是證明外核是液態的鐵證！"
+            },
+            {
+                title: "3. 地震波的物理特性與震相",
+                subtitle: "Physical Properties and Seismic Phases",
+                icon: "〰️",
+                q: "P波和S波到底有什麼不同？",
+                explain: "這就像是我們在玩不同的玩具：<br><br>👉 <b>P波（壓縮波 Primary Wave）</b>：就像你推拉一個「彈簧」，能量是一波一波向前擠壓的。它跑得最快，所以地震時你總是先感覺到上下的震動。<br>👉 <b>S波（剪力波 Secondary Wave）</b>：就像你上下甩動一根「繩子」。它跑得比較慢，但是會造成強烈的左右搖晃，這才是讓房子倒塌的主要殺手！",
+                visual: `
+                <div class="space-y-2 mt-4">
+                    <p class="text-sm font-bold text-blue-600">P波示範 (推拉彈簧) 🏃‍♂️ 跑得快</p>
+                    <div class="wave-container">
+                        <div class="p-wave-dots">
+                            <div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot compressed"></div><div class="p-dot compressed"></div><div class="p-dot compressed"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot compressed"></div><div class="p-dot compressed"></div><div class="p-dot compressed"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm font-bold text-red-500 mt-4">S波示範 (甩動繩子) 🐢 跑得慢但破壞力強</p>
+                    <div class="wave-container bg-red-50/50">
+                        <svg width="100%" height="100%" viewBox="0 0 500 80" preserveAspectRatio="none">
+                            <path class="s-wave-path" d="M0,40 Q25,10 50,40 T100,40 T150,40 T200,40 T250,40 T300,40 T350,40 T400,40 T450,40 T500,40" stroke="#ef4444" stroke-width="4" fill="none" />
+                        </svg>
+                    </div>
+                </div>
+                `,
+                quiz: "如果地震發生時，你先感覺到小小的上下跳動，然後過了大約 5 秒才開始劇烈左右搖晃。你能分辨出誰是P波，誰是S波嗎？",
+                ans: "沒錯！先來的上下跳動是跑得快的P波，後來的劇烈搖晃是較慢但威力大的S波。這 5 秒的時間差，也是地震預警系統爭取逃生的關鍵！"
+            },
+            {
+                title: "4. 地震研究中的模型、反演與不確定性",
+                subtitle: "Models, Inversion, and Uncertainty",
+                icon: "🧩",
+                q: "什麼是「反演問題」？為什麼找答案這麼難？",
+                explain: "「正演」就像是你把一顆石頭丟進水池，你可以精準計算出水波會怎麼擴散。但地震學做的是「反演」——我們只能站在水池邊，看著傳過來的水波形狀，然後要去猜：「剛剛掉下去的是石頭還是蘋果？有多重？掉在哪裡？」<br><br>因為不同的東西（例如大石頭輕輕掉，或小石頭重重砸）可能會產生類似的波紋，這在科學上叫做「非唯一性」。這就是為什麼地震學家需要不斷收集數據來減少猜錯的不確定性。",
+                quiz: "如果只有一個人在水池的一側看波紋，他能準確猜出物體落水的地點嗎？",
+                ans: "很難！所以我們需要在水池的四面八方（全球各地）都架設地震儀，數據越多，我們「反演」拼湊出的真相就越準確。"
+            },
+            {
+                title: "5. 科學進展與典範轉移",
+                subtitle: "Scientific Progress and Paradigm Shifts",
+                icon: "🗺️",
+                q: "地震學是如何幫「大陸漂移說」洗刷冤屈的？",
+                explain: "100多年前，韋格納提出「大陸以前是連在一起的，後來漂走了」，當時所有科學家都笑他：「大陸那麼重，怎麼可能在石頭上漂？」<br><br>直到後來，地震學家畫出了全球地震的分佈圖，發現地震不是亂跑的，而是乖乖地排列在海底的中洋脊和海溝上！這證明了地球的表殼是由一塊塊「板塊」拼成的，而且它們真的在移動！這就像是找到了一張證明大陸會動的關鍵拼圖，引發了科學界徹底的「典範轉移」（觀念大翻轉）。",
+                quiz: "你覺得現在我們腳下的板塊還在移動嗎？",
+                ans: "是的！板塊每年大概移動幾公分，就跟你的手指甲生長的速度差不多喔！"
+            },
+            {
+                title: "6. 地震危害與社會風險評估",
+                subtitle: "Seismic Hazards and Societal Risk",
+                icon: "🦁",
+                q: "「危害 (Hazard)」和「風險 (Risk)」有什麼不一樣？",
+                explain: "這兩個詞聽起來很像，但其實差很多！<br><b>危害 (Hazard)</b> 是大自然不可改變的現象。就像草原上有一隻兇猛的獅子。<br><b>風險 (Risk)</b> 是對人類造成的傷害。如果你光溜溜地站在獅子面前，風險極高；但如果你坐在一台堅固的裝甲車裡看獅子，風險就趨近於零。<br><br>地震本身（獅子）不會殺人，倒塌的建築物（沒坐進裝甲車）才會。所以我們無法消滅地震危害，但可以透過蓋堅固的房子、買保險和防災教育來大幅降低社會風險！",
+                quiz: "如果一個無人島上發生了規模 8.0 的超級大地震，它的「危害」和「風險」分別是高還是低？",
+                ans: "危害非常高（因為震動很強烈），但風險是零！因為那裡沒有人類和建築物會受到損失。"
+            },
+            {
+                title: "7. 工程地震學與抗震設計",
+                subtitle: "Engineering Seismology and Earthquake Engineering",
+                icon: "🏢",
+                q: "為什麼有時候地震來了，旁邊的小房子沒事，遠處的高樓大廈卻倒了？",
+                explain: "這跟一個神奇的物理現象叫做「共振週期」有關。想像你在推鞦韆，如果你推的節奏剛剛好對上鞦韆擺盪的節奏，鞦韆就會越飛越高。<br><br>每一棟建築物都有自己專屬的搖晃節奏（週期）。高樓搖得慢，矮房搖得快。如果遠方傳來的地震波（特別是表面波）的頻率，剛好對上了某棟高樓的共振週期，這棟樓就會像被推對節奏的鞦韆一樣，越搖越大力，最後結構承受不住就破壞了！沉積層（軟土）還會把這種特定的波給放大呢。",
+                quiz: "如果是建在堅硬岩盤上的房子，跟建在鬆軟泥土上的房子，哪一個比較危險？",
+                ans: "通常是建在鬆軟泥土上的更危險！這叫做「土壤放大效應」，軟土像果凍一樣，會把地震的搖晃幅度放大好幾倍。"
+            },
+            {
+                title: "8. 地震引發的次生災害",
+                subtitle: "Secondary Hazards",
+                icon: "🌊",
+                q: "除了搖晃，地震還會帶來哪些可怕的「副作用」？",
+                explain: "地震就像是一個壞脾氣的導火線，會引發一連串的「次生災害」：<br>1. <b>海嘯</b>：海底地震讓整個海水層被抬起來，形成巨大的波浪撲向海岸。<br>2. <b>山崩</b>：山上的土石被震鬆了，嘩啦啦地垮下來。<br>3. <b>土壤液化</b>：這最神奇！想像你拿著一碗濕漉漉的沙子用力搖晃，裡面的水分會被擠到表面，原本硬硬的沙子瞬間變成泥漿。這時蓋在上面的房子就會歪斜甚至沉下去！在 1906 年舊金山大地震中，倒下來的瓦斯燈還引發了大火，造成的破壞甚至比地震本身還大。",
+                quiz: "發生大地震時，如果你人在海邊，看到海水突然快速退潮，連海底的魚都露出來了，你該怎麼辦？",
+                ans: "趕快往高處跑！這是海嘯即將來襲的明顯前兆，海水退得越遠，撲回來的巨浪就越高！"
+            },
+            {
+                title: "9. 地震預報與預測的挑戰",
+                subtitle: "Earthquake Forecasting and Prediction",
+                icon: "🔮",
+                q: "科學這麼發達，為什麼還是不能準確「預測」明天幾點有地震？",
+                explain: "我們要先分清楚兩個觀念：<br><b>預報 (Forecasting)</b>：就像氣象局說「今年夏天颱風登陸的機率是 70%」。我們知道某個斷層未來 50 年內有很高機率發生地震。<br><b>預測 (Prediction)</b>：就像精確說出「下週二下午 3 點 05 分，你的頭頂會滴下三滴雨」。這需要極度精確的時間、地點和規模。<br><br>地底下的岩石錯綜複雜，有時候岩石斷裂前會發出微小的聲音（前震），有時候動物會逃跑，但這些「前兆」並不是每次都會出現。所以目前為止，科學家只能做長期的「預報」和地震發生當下的「早期預警」，還無法做到像算命一樣精準的「預測」。",
+                quiz: "如果有人在網路上發文說：「天空出現地震雲，明天台北一定會有規模 7 的地震」，身為大師的學生，你該相信嗎？",
+                ans: "絕對不要相信！目前科學界公認沒有任何單一現象（包括雲的形狀或動物行為）可以作為準確預測地震的科學依據。這通常是謠言喔！"
+            },
+            {
+                title: "10. 核武監測與條約核實",
+                subtitle: "Nuclear Monitoring and Treaty Verification",
+                icon: "🕵️‍♂️",
+                q: "地震學家如何幫世界維持和平，抓出偷偷試爆核彈的國家？",
+                explain: "天然地震和人造核爆，在地震儀上看起來是完全不一樣的！<br><b>天然地震</b>：是斷層在滑動摩擦，像是一大塊布被用力撕裂。它會產生很多左右搖晃的 S 波和表面波。<br><b>地下核爆</b>：是在一個點瞬間炸開，像是一聲巨大的「砰！」。它會產生極度強烈的 P 波（壓縮波），向四面八方擠壓出去，但幾乎沒有 S 波。<br><br>透過比對 P 波和表面波的能量大小，地震學家就像是地球的測謊機，任何國家在地下偷偷試爆核彈，都逃不過全球地震儀的法眼！",
+                quiz: "如果你在地震圖上看到一個信號，一開始的 P 波超級巨大，但後面幾乎沒有什麼搖晃的波，你猜這是地震還是爆炸？",
+                ans: "這是爆炸的特徵！P波極強但缺乏S波，這就是地震學家用來監測核試驗的關鍵秘訣。"
+            }
+        ];
+
+        const container = document.getElementById('topics-container');
+
+        topics.forEach((topic, index) => {
+            const topicId = `topic-${index}`;
+            const html = `
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-slate-50 focus:outline-none" onclick="toggleAccordion('${topicId}')">
+                        <div class="flex items-center gap-4">
+                            <span class="text-3xl">${topic.icon}</span>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">${topic.title}</h2>
+                                <p class="text-xs font-medium text-slate-400 mt-1">${topic.subtitle}</p>
+                            </div>
+                        </div>
+                        <span id="icon-${topicId}" class="text-2xl text-blue-500 transition-transform duration-300">➕</span>
+                    </button>
+                    
+                    <div id="${topicId}" class="topic-content px-6 pb-6 bg-slate-50/50">
+                        <div class="border-t border-slate-200 pt-4">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">🤔 核心探討：${topic.q}</h3>
+                            <p class="text-slate-700 leading-relaxed mb-4">${topic.explain}</p>
+                            
+                            ${topic.visual ? topic.visual : ''}
+
+                            <div class="mt-6 bg-blue-50 border border-blue-100 rounded-xl p-4">
+                                <h4 class="font-bold text-blue-800 mb-2">🎓 隨堂小測驗</h4>
+                                <p class="text-slate-700 mb-3">${topic.quiz}</p>
+                                <button onclick="toggleAnswer('ans-${topicId}')" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors">
+                                    看大師解答
+                                </button>
+                                <div id="ans-${topicId}" class="quiz-answer mt-3 p-3 bg-white rounded border border-green-200 text-green-800 font-medium">
+                                    ✨ <b>解答：</b>${topic.ans}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += html;
+        });
+
+        // 手風琴開關邏輯
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+                icon.innerText = '➕';
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(45deg)';
+                icon.innerText = '✖';
+            }
+        }
+
+        // 隨堂小測驗解答開關邏輯
+        function toggleAnswer(id) {
+            const ansElement = document.getElementById(id);
+            if(ansElement.classList.contains('show')) {
+                ansElement.classList.remove('show');
+            } else {
+                ansElement.classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>
