@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地震學大師互動教室 | 索引導覽版</title>
+    <title>地震學大師互動教室 | 彈性回跳理論與導覽</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
@@ -17,21 +17,30 @@
 
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; scroll-behavior: smooth; }
-        
-        /* 側邊欄滾動條隱藏但功能保留 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* 動畫設計 */
-        .wave-container { overflow: hidden; position: relative; width: 100%; height: 80px; background: #1e293b; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid #334155; display: flex; align-items: center;}
-        .p-wave-dots { display: flex; width: 200%; animation: pWaveAnim 3s infinite linear; }
-        .p-dot { width: 6px; height: 40px; background-color: #60a5fa; margin-right: 15px; border-radius: 3px; }
-        .p-dot.compressed { margin-right: 4px; background-color: #f87171; }
-        @keyframes pWaveAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        /* 主視覺動畫：P波與S波 */
+        .wave-hero { position: relative; height: 160px; background: #0f172a; border-radius: 1rem; overflow: hidden; border: 1px solid #1e293b; }
+        .p-wave-track { position: absolute; top: 30px; width: 100%; height: 40px; display: flex; align-items: center; }
+        .s-wave-track { position: absolute; bottom: 30px; width: 100%; height: 40px; display: flex; align-items: center; }
+        
+        .p-particle { width: 8px; height: 30px; background: #60a5fa; margin-right: 12px; border-radius: 4px; animation: pAnim 2s infinite ease-in-out; }
+        @keyframes pAnim { 
+            0%, 100% { transform: translateX(0); background: #60a5fa; } 
+            50% { transform: translateX(20px); background: #f87171; } 
+        }
 
-        .s-wave-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: sWaveAnim 4s linear infinite; }
-        @keyframes sWaveAnim { to { stroke-dashoffset: 0; } }
+        .s-particle { width: 10px; height: 10px; background: #fbbf24; border-radius: 50%; position: absolute; animation: sAnim 3s infinite linear; }
+        @keyframes sAnim {
+            0% { left: -20px; transform: translateY(0); }
+            25% { transform: translateY(-20px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(20px); }
+            100% { left: 105%; transform: translateY(0); }
+        }
 
+        /* 內容展開動畫 */
         .topic-content { transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
         .topic-content.open { max-height: 5000px; opacity: 1; padding-top: 1.5rem; }
         
@@ -39,11 +48,10 @@
         .quiz-answer.show { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 導覽連結啟動狀態 */
         .nav-link.active { color: #60a5fa; border-left-color: #60a5fa; background: rgba(51, 65, 85, 0.5); }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-200 antialiased selection:bg-blue-500/30 selection:text-blue-200 flex">
+<body class="bg-slate-900 text-slate-200 antialiased selection:bg-blue-500/30 flex">
 
     <!-- 左側固定索引欄 -->
     <aside class="hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-slate-950 border-r border-slate-800 p-6 overflow-y-auto no-scrollbar">
@@ -51,42 +59,45 @@
             <h2 class="text-xl font-black text-slate-100">課程目錄</h2>
             <p class="text-xs text-slate-500 uppercase tracking-widest mt-1">Seismology Master</p>
         </div>
-        <nav class="space-y-1 text-sm">
-            <a href="#topic-0" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">1. 定義與研究範疇</a>
-            <a href="#topic-1" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">2. 地球內部結構</a>
-            <a href="#topic-2" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">3. 物理特性與震相</a>
-            <a href="#topic-3" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">4. 模型與反演不確定性</a>
-            <a href="#topic-4" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">5. 科學進展與典範轉移</a>
-            <a href="#topic-5" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">6. 危害與社會風險評估</a>
-            <a href="#topic-6" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">7. 工程地震學與抗震</a>
-            <a href="#topic-7" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">8. 地震引發的次生災害</a>
-            <a href="#topic-8" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">9. 預報與預測的挑戰</a>
-            <a href="#topic-9" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">10. 核武監測與條約核實</a>
+        <nav id="sidebar-nav" class="space-y-1 text-sm">
+            <!-- 由 JS 動態生成 -->
         </nav>
-        <div class="mt-auto pt-6 text-xs text-slate-600">
-            © 2024 Seismology Master
-        </div>
     </aside>
 
     <!-- 右側主內容 -->
     <div class="flex-1 min-w-0">
-        <!-- 頁首 -->
         <header class="bg-slate-950/50 backdrop-blur-md sticky top-0 z-10 border-b border-slate-800 py-6 px-8 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-black text-slate-100">地震學大師互動教室</h1>
-            </div>
-            <div class="hidden sm:block">
-                <span class="text-xs bg-blue-900/40 text-blue-400 border border-blue-800 px-3 py-1 rounded-full font-bold">CHAPTER 1: INTRODUCTION</span>
+            <h1 class="text-2xl md:text-3xl font-black text-slate-100 italic tracking-tighter">SEISMOLOGY <span class="text-blue-500 text-base not-italic font-normal ml-2">Chapter 1</span></h1>
+            <div class="hidden sm:flex gap-4">
+                <span class="text-[10px] bg-slate-800 text-slate-400 border border-slate-700 px-2 py-1 rounded">REF: REID (1906)</span>
+                <span class="text-[10px] bg-blue-900/40 text-blue-400 border border-blue-800 px-2 py-1 rounded">INTERACTIVE DOC</span>
             </div>
         </header>
 
         <main class="max-w-4xl mx-auto p-6 md:p-12 space-y-12">
             
-            <!-- 導讀區 -->
-            <section class="bg-slate-800/30 rounded-2xl p-8 border border-slate-800 shadow-2xl">
-                <p class="text-lg text-slate-400 leading-relaxed italic">
-                    「跟我一起，把複雜的物理現象變成生動的生活故事。地震學不只是關於震動，它是關於我們如何像照射 X 光一樣，『看見』無法觸及的地心深處。」
-                </p>
+            <!-- 主視覺動畫區 (替換原本文字) -->
+            <section class="space-y-4">
+                <div class="wave-hero">
+                    <div class="p-wave-track">
+                        <span class="text-[10px] text-blue-500 font-bold ml-4 mr-8 uppercase">P-Wave (Compression)</span>
+                        <div class="flex">
+                            <div class="p-particle" style="animation-delay: 0.1s"></div>
+                            <div class="p-particle" style="animation-delay: 0.2s"></div>
+                            <div class="p-particle" style="animation-delay: 0.3s"></div>
+                            <div class="p-particle" style="animation-delay: 0.4s"></div>
+                            <div class="p-particle" style="animation-delay: 0.5s"></div>
+                            <div class="p-particle" style="animation-delay: 0.6s"></div>
+                        </div>
+                    </div>
+                    <div class="s-wave-track">
+                        <span class="text-[10px] text-yellow-500 font-bold ml-4 mr-8 uppercase">S-Wave (Shear)</span>
+                        <div class="s-particle" style="animation-delay: 0s"></div>
+                        <div class="s-particle" style="animation-delay: 0.5s"></div>
+                        <div class="s-particle" style="animation-delay: 1s"></div>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-slate-500 italic">模擬：P波的縱向壓縮感與S波的橫向剪力感</p>
             </section>
 
             <!-- 內容區 -->
@@ -95,167 +106,128 @@
         </main>
 
         <footer class="text-center py-12 text-slate-600 text-sm border-t border-slate-800">
-            <p>保持好奇，繼續探索科學奧秘 | Seismology Interactive Laboratory</p>
+            <p>Seismology Interactive Laboratory | Powered by Aki & Richards Theory</p>
         </footer>
     </div>
 
     <script>
         const topics = [
             {
-                title: "1. 地震學的定義與研究範疇",
-                subtitle: "Definition and Scope of Seismology",
-                q: "地震圖如何同時包含關於「震源」性質與「傳播介質」物理特性的資訊？",
-                explain: "這是地震學最核心的概念：地震圖 = 震源效應 × 傳播路徑效應 × 儀器效應。透過分析記錄到的訊號，我們可以得知能量是從哪裡來的（震源），以及波在傳過來的時候遇到了什麼樣的岩石（介質）。",
+                title: "1. 地震學定義與彈性回跳理論",
+                subtitle: "Definition and Elastic Rebound Theory",
+                q: "地震發生的一瞬間，地殼裡到底發生了什麼？",
+                explain: "地震學不僅是研究震動，更是研究「彈性波」。根據 1906 年舊金山大地震後由 Harry Fielding Reid 提出的**彈性回跳理論 (Elastic Rebound Theory)**，地震是地殼累積應力後，瞬間「回彈」釋放能量的過程。",
                 visual: `
-                <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-5 md:p-8">
-                    <h4 class="text-xl font-bold text-slate-100 mb-6 flex items-center gap-3">
-                        核心架構圖：地震資訊的獲取 (Fig 1.1-1)
-                    </h4>
-                    
-                    <div class="flex flex-col items-center mb-8">
-                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-2.png" alt="Seismology concept diagram" class="w-full max-w-2xl rounded-lg shadow-2xl bg-white border border-slate-600">
-                        <p class="text-xs text-slate-500 mt-4">地震學基本架構：震源 (Source) → 介質 (Medium) → 接收器 (Receiver)</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                        <div class="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                            <span class="inline-block px-2 py-1 bg-red-900/50 text-red-400 text-xs font-bold rounded mb-3">1. 震源 (Source)</span>
-                            <p class="text-slate-300">能量釋放的起始點（自然地震或人工爆震）。決定了波的<span class="text-white">初始形狀、振幅與頻率</span>。</p>
-                        </div>
-                        <div class="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                            <span class="inline-block px-2 py-1 bg-blue-900/50 text-blue-400 text-xs font-bold rounded mb-3">2. 介質 (Medium)</span>
-                            <p class="text-slate-300">地球內部構造。就像一個<span class="text-white">「濾波器」</span>，不同岩石會改變波速，並產生能量衰減與散射。</p>
-                        </div>
-                        <div class="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                            <span class="inline-block px-2 py-1 bg-emerald-900/50 text-emerald-400 text-xs font-bold rounded mb-3">3. 接收器 (Receiver)</span>
-                            <p class="text-slate-300">即地震圖。記錄地面運動。從中可讀取<span class="text-white">走時、規模</span>等關鍵數據。</p>
+                <div class="mt-8 space-y-8">
+                    <!-- 地震學架構簡圖 -->
+                    <div class="bg-slate-900 border border-slate-700 rounded-xl p-6">
+                        <div class="flex flex-col items-center">
+                            <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-2.png" alt="Seismology concept diagram" class="w-full max-w-xl rounded-lg bg-white p-2">
+                            <p class="text-xs text-slate-500 mt-3 font-mono tracking-tighter">FIG 1.1-1: SOURCE → MEDIUM → RECEIVER</p>
                         </div>
                     </div>
 
-                    <div class="mt-8 p-6 bg-indigo-900/20 rounded-xl border border-indigo-900/50">
-                        <h5 class="text-indigo-400 font-bold mb-3 uppercase tracking-wider text-xs">核心科學邏輯：反演問題 (Inverse Problems)</h5>
-                        <ul class="space-y-4 text-sm text-slate-300">
-                            <li class="flex gap-4">
-                                <span class="text-indigo-400 font-mono">Forward</span>
-                                <span>已知震源與構造 $\rightarrow$ 預測地震圖長什麼樣子。</span>
-                            </li>
-                            <li class="flex gap-4">
-                                <span class="text-indigo-400 font-mono">Inverse</span>
-                                <span>觀察地震圖 $\rightarrow$ 回推：震源在哪裡？有多大？波經過了什麼樣的岩石？這是地震學家的主要任務。</span>
-                            </li>
-                        </ul>
+                    <!-- 彈性回跳理論 -->
+                    <div class="bg-slate-900 border border-slate-700 rounded-xl p-6">
+                        <h4 class="text-lg font-bold text-slate-100 mb-6 flex items-center gap-2">
+                            <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                            彈性回跳理論 (Elastic Rebound Theory)
+                        </h4>
+                        
+                        <div class="flex flex-col items-center mb-8">
+                            <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-3.png" alt="Elastic Rebound Theory" class="w-full max-w-2xl rounded-lg bg-white p-4 shadow-inner">
+                            <p class="text-xs text-slate-500 mt-4">由 H.F. Reid 提出：解釋應力累積至破裂的週期性過程</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div class="bg-slate-800/80 p-4 rounded-lg border-l-4 border-slate-500">
+                                <span class="block text-slate-400 font-bold mb-1">(a) 原始狀態</span>
+                                <p class="text-slate-300">岩層平衡，彈性應變為零。斷層兩側尚未產生位移。</p>
+                            </div>
+                            <div class="bg-slate-800/80 p-4 rounded-lg border-l-4 border-yellow-500">
+                                <span class="block text-yellow-500 font-bold mb-1">(b) 蓄力變形</span>
+                                <p class="text-slate-300">受板塊擠壓，岩石像彈簧般彎曲，能量以<span class="text-white">彈性應變能</span>形式儲存。</p>
+                            </div>
+                            <div class="bg-slate-800/80 p-4 rounded-lg border-l-4 border-red-500">
+                                <span class="block text-red-500 font-bold mb-1">(c) 破裂回跳</span>
+                                <p class="text-slate-300">應力超過摩擦力，岩層斷裂並<span class="text-white">回跳</span>平直。儲存的能量轉化為地震波。</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 p-6 bg-blue-900/10 rounded-xl border border-blue-900/40">
+                            <h5 class="text-blue-400 font-bold mb-2 text-sm">理論價值與挑戰</h5>
+                            <p class="text-sm text-slate-400 leading-relaxed italic">
+                                雖然我們知道能量在累積（b階段），但「破裂點」的精確時刻極難預測。地震學家觀察 (c) 階段的位移，利用「反演」技術回推 (b) 階段累積了多少應力。
+                            </p>
+                        </div>
                     </div>
                 </div>
                 `,
-                quiz: "如果地震儀測到了訊號，但我們想知道波經過的地底岩石是軟還是硬，這屬於「正向問題」還是「反演問題」？",
-                ans: "這屬於「反演問題」！我們是從結果（地震圖）出發，回推造成這個結果的原因（地球構造）。"
+                quiz: "如果一個斷層的滑動量（Offset）非常驚人，這代表在理論中的哪個階段累積了更多能量？",
+                ans: "代表在 (b) 蓄力階段累積了極大的應力與變形。回跳的位移越大，代表釋放的地震矩 $M_0$ 越高，震級也就越大。"
             },
             {
-                title: "2. 地球內部結構的探索",
-                subtitle: "Exploring the Earth's Interior",
-                q: "我們挖地洞最深才 13 公里，怎麼知道地球中心長什麼樣子？",
-                explain: "利用地震波來拍打地球這顆大西瓜！我們發現，S波絕對無法穿透液體。當S波傳到 2900 公里深時突然消失，這證明了「液態外核」的存在。",
-                visual: `<div class="flex justify-center my-6 bg-slate-950 py-4 rounded-xl border border-slate-800"><svg width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="#334155" /><circle cx="100" cy="100" r="50" fill="#d97706" /><circle cx="100" cy="100" r="20" fill="#dc2626" /><path d="M 10 100 Q 50 20 100 10" stroke="#94a3b8" stroke-width="2" fill="none" stroke-dasharray="4,4"/><text x="150" y="30" fill="#e2e8f0" font-size="12">地震波折射</text></svg></div>`,
-                quiz: "既然S波不能穿透液態外核，在震央的對面測得到S波嗎？",
-                ans: "測不到！這就是著名的「S波陰影區」。"
+                title: "2. 地球內部結構與波相",
+                subtitle: "Earth Interior and Phases",
+                q: "如何利用波相確認地球核心是液態？",
+                explain: "S波（剪力波）無法在流體中傳播。地震學家發現 S波傳入地函底部後會消失或轉化，從而確認外核為液態。",
+                quiz: "震央對面 143 度以外收不到 P 波直接波嗎？",
+                ans: "可以收到，但會產生折射，形成 P 波影區邊界。S 波則是完全無法穿透。"
             },
             {
-                title: "3. 地震波的物理特性與震相",
-                subtitle: "Physical Properties and Seismic Phases",
-                q: "P波和S波到底有什麼不同？",
-                explain: "P波是推拉彈簧的壓縮波，跑最快；S波是甩動繩子的剪力波，跑得慢但左右搖晃更劇烈。",
-                visual: `<div class="space-y-4 mt-6"><div class="wave-container"><div class="p-wave-dots"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot compressed"></div><div class="p-dot compressed"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot compressed"></div><div class="p-dot compressed"></div><div class="p-dot"></div></div></div><div class="wave-container bg-red-950/20"><svg width="100%" height="100%" viewBox="0 0 500 80" preserveAspectRatio="none"><path class="s-wave-path" d="M0,40 Q25,10 50,40 T100,40 T150,40 T200,40 T250,40 T300,40 T350,40 T400,40 T450,40 T500,40" stroke="#f87171" stroke-width="4" fill="none" /></svg></div></div>`,
-                quiz: "地震來時先感覺到上下跳，過幾秒才左右搖，為什麼？",
-                ans: "先到的是快如閃電的 P 波，後到的是慢吞吞但威力強大的 S 波。"
+                title: "3. 反演問題與不確定性",
+                subtitle: "Inverse Problems and Uncertainty",
+                q: "為什麼不同的模型可以解釋同一組數據？",
+                explain: "這就是「非唯一性」。由於測站分佈有限，多種構造模型可能導向相同的走時結果。",
+                quiz: "如何降低反演的不確定性？",
+                ans: "引入更多獨立觀測數據（如重力、地磁）或增加全球寬頻觀測網的密度。"
             },
             {
-                title: "4. 地震研究中的模型、反演與不確定性",
-                subtitle: "Models, Inversion, and Uncertainty",
-                q: "什麼是「非唯一性」？",
-                explain: "不同的原因可能導致相同的結果。在反演問題中，可能有多種地球構造模型都能解釋同一張地震圖，這就是科學上的挑戰。",
-                quiz: "增加觀測站的數量有助於解決非唯一性嗎？",
-                ans: "是的！數據越多，我們能排除的錯誤模型就越多。"
+                title: "4. 板塊構造與典範轉移",
+                subtitle: "Plate Tectonics and Paradigms",
+                q: "地震分佈如何證明板塊邊界？",
+                explain: "地震並非隨機發生，而是集中在狹窄的帶狀區域。這些區域正是板塊互相推擠、張裂或錯動的邊界。",
+                quiz: "中洋脊發生的地震通常比較深還是淺？",
+                ans: "通常較淺，因為那裡是熱的新生地殼張裂處。"
             },
             {
-                title: "5. 科學進展與典範轉移",
-                subtitle: "Scientific Progress and Paradigm Shifts",
-                q: "地震學如何幫「大陸漂移說」洗刷冤屈？",
-                explain: "地震學家繪製出的全球地震分佈圖，精準勾勒出了板塊邊界。這張地圖讓科學界承認，板塊真的在移動。",
-                quiz: "韋格納在世時，大陸漂移說被廣泛接受嗎？",
-                ans: "完全沒有。直到 1960 年代地震觀測數據普及後，才發生了「典範轉移」。"
-            },
-            {
-                title: "6. 地震危害與社會風險評估",
-                subtitle: "Seismic Hazards and Societal Risk",
-                q: "「危害 (Hazard)」與「風險 (Risk)」的區別？",
-                explain: "危害是自然的（如獅子），風險是人為的損失（如果你光溜溜站在獅子前）。我們無法阻止地震，但可以降低風險。",
-                quiz: "無人島上的超級地震有風險嗎？",
-                ans: "沒有風險，因為沒有人命或財產在那裡。"
-            },
-            {
-                title: "7. 工程地震學與抗震設計",
-                subtitle: "Engineering Seismology and Earthquake Engineering",
-                q: "為什麼有時矮房沒事，高樓卻倒了？",
-                explain: "這就是「共振」。如果地震波的頻率剛好對上大樓的搖晃頻率（週期），大樓就會越搖越大力直到損毀。",
-                quiz: "軟弱土層會放大震動嗎？",
-                ans: "會！軟土像果凍，會顯著放大地震波的振幅。"
-            },
-            {
-                title: "8. 地震引發的次生災害",
-                subtitle: "Secondary Hazards",
-                q: "什麼是「土壤液化」？",
-                explain: "當飽和沙土受到強烈震動，沙粒間的孔隙水壓上升，使沙土瞬間失去強度變成泥漿。",
-                quiz: "海嘯發生前，海水通常會怎麼變化？",
-                ans: "海水會異常地快速退潮，露出大片海底。"
-            },
-            {
-                title: "9. 地震預報與預測的挑戰",
-                subtitle: "Earthquake Forecasting and Prediction",
-                q: "預報與預測的不同？",
-                explain: "預報是機率性的（長期）；預測是精準的時間、地點（目前科學極難辦到）。",
-                quiz: "地震預警 (Early Warning) 屬於預測嗎？",
-                ans: "不屬於。它是地震「已經發生」後，利用 P 波比 S 波快的原理發出的緊急通知。"
-            },
-            {
-                title: "10. 核武監測與條約核實",
-                subtitle: "Nuclear Monitoring and Treaty Verification",
-                q: "如何辨別核爆與自然地震？",
-                explain: "核爆是「點源爆炸」，產生的 P 波極強（$m_b$ 高），但缺乏表面波（$M_s$ 低）。這與斷層錯動產生的波動分佈截然不同。",
-                visual: `
-                <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-5 md:p-8">
-                    <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-1.png" alt="mb vs Ms" class="w-full max-w-2xl mx-auto rounded-lg bg-white border border-slate-600">
-                    <p class="text-xs text-slate-500 mt-4 text-center">mb vs Ms 分類圖：核爆（上方群體）明顯偏離自然地震路徑</p>
-                </div>
-                `,
-                quiz: "如果在圖表中發現某訊號的 mb 很高但 Ms 很低，這可能是什麼？",
-                ans: "高機率是地下核武試爆！"
+                title: "5. 核武監測與鑑別",
+                subtitle: "Nuclear Test Monitoring",
+                q: "如何分辨是炸彈還是斷層？",
+                explain: "核爆是向外的全向擠壓，產生極大的 P 波（$m_b$ 高）；地震是斷層剪力錯動，產生較明顯的表面波（$M_s$ 高）。",
+                visual: `<div class="mt-4 bg-white p-4 rounded-xl"><img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-1.png" class="mx-auto max-w-sm"></div>`,
+                quiz: "辨別核爆的最關鍵參數是什麼？",
+                ans: "$m_b$ 與 $M_s$ 的比值（體波規模與表面波規模的比值）。"
             }
         ];
 
         const container = document.getElementById('topics-container');
+        const nav = document.getElementById('sidebar-nav');
 
-        // 生成內容
+        // 生成內容與索引
         topics.forEach((topic, index) => {
             const topicId = `topic-${index}`;
+            
+            // 生成內容
             container.innerHTML += `
                 <div id="${topicId}" class="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 scroll-mt-24">
-                    <div class="px-8 py-6 bg-slate-800 flex justify-between items-center cursor-pointer" onclick="toggleAccordion('${topicId}')">
+                    <div class="px-8 py-6 bg-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-700/50 transition-colors" onclick="toggleAccordion('${topicId}')">
                         <div>
-                            <h2 class="text-2xl font-black text-slate-100">${topic.title}</h2>
-                            <p class="text-sm text-slate-400 font-medium">${topic.subtitle}</p>
+                            <h2 class="text-xl md:text-2xl font-black text-slate-100">${topic.title}</h2>
+                            <p class="text-xs text-slate-400 font-medium tracking-wide uppercase">${topic.subtitle}</p>
                         </div>
-                        <span id="icon-${topicId}" class="text-2xl text-slate-500 transition-transform">+</span>
+                        <span id="icon-${topicId}" class="text-xl text-slate-500 transition-transform">+</span>
                     </div>
                     <div id="content-${topicId}" class="topic-content px-8 pb-8">
                         <div class="border-t border-slate-700 pt-6">
-                            <h3 class="text-lg font-bold text-blue-400 mb-4">核心探討：${topic.q}</h3>
+                            <h3 class="text-lg font-bold text-blue-400 mb-4">${topic.q}</h3>
                             <p class="text-slate-300 leading-relaxed">${topic.explain}</p>
                             ${topic.visual ? topic.visual : ''}
                             <div class="mt-8 bg-slate-900/50 p-6 rounded-xl border border-slate-700">
-                                <p class="text-sm font-bold text-slate-400 mb-3 uppercase">互動測試</p>
+                                <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-widest">Master Challenge</p>
                                 <p class="text-slate-200 mb-4 font-medium">${topic.quiz}</p>
-                                <button onclick="toggleAnswer('ans-${topicId}')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 px-4 rounded-md transition-all">顯示大師解答</button>
-                                <div id="ans-${topicId}" class="quiz-answer mt-4 p-4 bg-blue-900/20 rounded-lg text-blue-300 border border-blue-900/30">
+                                <button onclick="toggleAnswer('ans-${topicId}')" class="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black py-2 px-6 rounded-full transition-all uppercase tracking-tighter">Reveal Answer</button>
+                                <div id="ans-${topicId}" class="quiz-answer mt-4 p-4 bg-blue-900/20 rounded-lg text-blue-300 border border-blue-900/30 text-sm">
                                     ${topic.ans}
                                 </div>
                             </div>
@@ -263,29 +235,29 @@
                     </div>
                 </div>
             `;
+
+            // 生成左側導航連結
+            nav.innerHTML += `
+                <a href="#${topicId}" class="nav-link block py-2 px-3 border-l-2 border-transparent hover:text-blue-400 hover:bg-slate-800 transition-all">
+                    ${topic.title}
+                </a>
+            `;
         });
 
-        // 手風琴控制
         function toggleAccordion(id) {
             const content = document.getElementById(`content-${id}`);
             const icon = document.getElementById(`icon-${id}`);
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                content.classList.add('open');
-                icon.style.transform = 'rotate(45deg)';
-            }
+            content.classList.toggle('open');
+            icon.style.transform = content.classList.contains('open') ? 'rotate(45deg)' : 'rotate(0deg)';
         }
 
-        // 解答控制
         function toggleAnswer(id) {
             document.getElementById(id).classList.toggle('show');
         }
 
-        // 索引連動
-        const sections = document.querySelectorAll('div[id^="topic-"]');
+        // ScrollSpy 邏輯
         const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('div[id^="topic-"]');
 
         window.addEventListener('scroll', () => {
             let current = "";
@@ -304,7 +276,7 @@
             });
         });
         
-        // 初始化第一個手風琴
+        // 預設展開第一項
         toggleAccordion('topic-0');
     </script>
 </body>
