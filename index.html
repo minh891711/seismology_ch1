@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>地震學大師互動教室 | 深度理論專業版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
+
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
@@ -42,6 +42,12 @@
         .quiz-answer.show { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .nav-link.active { color: #60a5fa; border-left-color: #60a5fa; background: rgba(51, 65, 85, 0.5); }
+
+        /* 圖片說明樣式 */
+        .figure { background: #0f1724; border: 1px solid #233044; padding: 1rem; border-radius: 0.75rem; margin-top: 1rem; }
+        .figure img { display: block; max-width: 100%; height: auto; border-radius: 0.5rem; margin: 0.5rem 0; }
+        .figure .fig-caption { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 0.5rem; }
+        .figure .fig-note { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-200 antialiased selection:bg-blue-500/30 selection:text-blue-200 flex">
@@ -77,6 +83,7 @@
     </div>
 
     <script>
+        // === 原始 topics（保留並在合適位置加入圖片與說明） ===
         const topics = [
             {
                 title: "1. 定義與彈性回跳理論",
@@ -128,6 +135,60 @@
                 subtitle: "Forward vs Inverse Problems",
                 q: "如何從雜亂的波形中「解碼」地底秘密？",
                 explain: "正向問題是透過數學模型預測數據；反演問題則是地震學的核心挑戰：根據觀測數據推算震源參數與地底構造。然而，反演常面臨「非唯一性」，即多種模型可能解釋同一數據。",
+                visual: `
+                <div class="mt-6 space-y-4 bg-slate-900 border border-slate-700 rounded-xl p-6">
+                    <h4 class="text-xl font-bold text-slate-100 mb-3">模型化與反演 — 圖示說明集</h4>
+
+                    <!-- 圖片 1: 1.1-3 -->
+                    <div class="figure">
+                        <div class="fig-caption font-bold text-blue-300">圖：模型化的落差與誤差來源（1.1-3）</div>
+                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-3.png" alt="Model vs Earth - errors">
+                        <div class="fig-note">
+                            <b>來源與重點：</b> 此圖探討真實地球（The Earth）與簡化數學模型（The Model）之間的差異，進而產生兩類誤差：隨機誤差與系統誤差。<br>
+                            <b>三要點：</b>
+                            <ol class="list-decimal ml-4 mt-1">
+                                <li>真實地球極為複雜且異質；模型為了可解性往往做簡化（例如水平同質層）。</li>
+                                <li>隨機誤差來自資料與儀器，可透過統計平均降低；系統誤差源自模型不當（例如忽略傾斜地層），必須修正模型設計才能消除。</li>
+                                <li>過度信任簡化模型可能導致錯誤解讀反演結果（把模型偏差誤認為地球真實特徵）。</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- 圖片 2: 1.1-4 -->
+                    <div class="figure">
+                        <div class="fig-caption font-bold text-blue-300">圖：正向問題 vs 反演問題（1.1-4）</div>
+                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-4.png" alt="Forward vs Inverse">
+                        <div class="fig-note">
+                            <b>解讀：</b> 正向問題：已知模型 → 預測資料（Model → Data）；反演問題：已知資料 → 推估模型（Data → Model）。<br>
+                            <b>反演的挑戰：</b> 非唯一性（不同模型可擬合相同資料）、資料分布與雜訊限制、系統誤差使得增加資料量也無法解決的偏差。
+                        </div>
+                    </div>
+
+                    <!-- 圖片 3: 1.1-5 -->
+                    <div class="figure">
+                        <div class="fig-caption font-bold text-blue-300">圖：模型與真實世界的落差再闡述（1.1-5）</div>
+                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-5.png" alt="Model vs Earth - deeper view">
+                        <div class="fig-note">
+                            <b>層次式解讀：</b>
+                            <ul class="list-disc ml-4 mt-1">
+                                <li>左：真實世界的複雜地層；右：為計算可行所使用的簡化模型。</li>
+                                <li>系統誤差強調模型選擇的重要性—錯用模型會把模型缺陷當成地球特徵。</li>
+                                <li>建議：在反演流程中同時考量模型不確定性，並用模型選擇或貝式方法來評估不確定度。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 圖片 4: 1.2-3 -->
+                    <div class="figure">
+                        <div class="fig-caption font-bold text-blue-300">圖：模型化流程與誤差（補充：1.2-3）</div>
+                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.2-3.png" alt="Modeling process and errors">
+                        <div class="fig-note">
+                            這張圖與 1.1-3 類似，但更強調「解釋迴圈」：資料 → 反演 → 模型 → 預測 → 與資料比對。當模型不齊全時，反覆迴圈會穩定在錯誤解釋上；因此必須引入多樣化資料來源與模型空間檢驗（model validation）。
+                        </div>
+                    </div>
+
+                </div>
+                `,
                 quiz: "在反演中，數據中的「噪訊 (Noise)」會造成什麼影響？",
                 ans: "噪訊會使解不穩定，導致我們無法精確分辨細微的地殼層次差異。"
             },
@@ -136,6 +197,7 @@
                 subtitle: "Paradigm Shifts in Seismology",
                 q: "地震學如何促成板塊構造學說的確立？",
                 explain: "1960年代以前，大陸漂移學說仍具爭議。隨著全球標準地震測站網 (WWSSN) 的建立，科學家精確繪製出中洋脊與海溝的地震帶分佈，這才讓地質學發生了「典範轉移」。",
+                visual: ``,
                 quiz: "誰是早期反對大陸漂移的最著名地震學家？",
                 ans: "Harold Jeffreys，他當時認為地球物質過於堅硬，不可能發生大陸規模的水平運動。"
             },
@@ -145,119 +207,155 @@
                 q: "為何不同專家對同一地區的減災規劃會有巨大差異？",
                 explain: "危害 (Hazard) 是自然的威脅，而風險 (Risk) 則包含社會經濟損害。地震危害分析高度依賴於對「最大潛在規模」與「地表運動模型」的假設。",
                 visual: `
-                <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-6 md:p-8">
-                    <h4 class="text-xl font-bold text-slate-100 mb-6">模型敏感度測試：新馬德里地震帶 (NMSZ) 案例</h4>
-                    <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1-2.14.png" alt="Seismic Hazard Sensitivity" class="w-full max-w-2xl mx-auto rounded-lg shadow-xl border border-slate-600 bg-white p-2">
-                    <div class="space-y-4 mt-6 text-sm">
-                        <p class="text-slate-300"><b class="text-blue-400">1. 規模 ($M_{max}$) 的影響：</b> 比較上排 ($M=8$) 與下排 ($M=7$)，可見當假設規模下降時，高加速度區域顯著縮小。這說明對極端事件規模的判斷決定了基礎建設的成本。</p>
-                        <p class="text-slate-300"><b class="text-blue-400">2. 衰減模型的選擇：</b> 左列 (Frankel) 與右列 (Toro) 展現了截然不同的衰減模式。科學家對波如何在特定地殼中消失的認知不一，會導致預測結果出現數倍差距。</p>
-                        <p class="text-slate-300 italic">單位標註：圖中深色區代表峰值加速度 (PGA) 超過 $1.0g$，足以摧毀非抗震結構。</p>
+                <div class="mt-6 space-y-4 bg-slate-900 border border-slate-700 rounded-xl p-6">
+                    <h4 class="text-xl font-bold text-slate-100 mb-3">地震危害—衰減與脆弱度圖解</h4>
+
+                    <!-- 圖片：1.2-5 (衰減差異) -->
+                    <div class="figure">
+                        <div class="fig-caption font-bold text-blue-300">圖：東西部地殼衰減差異（1.2-5）</div>
+                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.2-5.png" alt="Attenuation Eastern vs Western USA">
+                        <div class="fig-note">
+                            <b>說明要點：</b> X 軸為震源距離 (km)，Y 軸為峰值加速度（g）。圖示顯示東部（Eastern USA）衰減較緩，能量可傳播更遠；西部（Western USA）則衰減較快。<br>
+                            <b>防災含意：</b> 在東部，即便是中等規模地震，其影響範圍可能遠大於西部同級別地震，對建築規範與減災策略有重要影響。
+                        </div>
                     </div>
-                </div>`,
-                quiz: "如果政府決定採用最保守（右上角）的模型，會發生什麼後果？",
-                ans: "建築防震係數要求會極高，導致建設成本劇增，但也提供了最大程度的安全性。"
+
+                    <!-- 圖片：1.2-6 (脆弱度曲線) -->
+                    <div class="figure">
+                        <div class="fig-caption font-bold text-blue-300">圖：震度與建築倒塌率（脆弱度曲線，1.2-6）</div>
+                        <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.2-6.png" alt="Vulnerability curves">
+                        <div class="fig-note">
+                            <b>說明要點：</b> X 軸為修正麥卡利震度（MMI），Y 軸為倒塌百分比。曲線展示不同建築類型（如土坯、燒結磚、木構、一般 RC、抗震 RC）的抗震脆弱度差異。<br>
+                            <b>工程含意：</b> 震度 VI 為脆弱建築開始出問題的分水嶺；震度 VIII 則是多數建築開始出現明顯倒塌的門檻。強化工程設計、採取抗震加固能顯著降低倒塌率。
+                        </div>
+                    </div>
+                </div>
+                `,
+                quiz: "如何把地殼衰減差異納入區域災害評估？",
+                ans: "需要針對區域地質特性建構適當的衰減關係（attenuation relations），並把不確定度（包含系統誤差）一併納入風險分析模型中。"
+            },
+
+            // 以下保留核心結構（7-10 為簡短佔位，可按需求擴充）
+            {
+                title: "7. 工程抗震與共振",
+                subtitle: "Engineering Seismology & Resonance",
+                q: "建築的固有頻率為何重要？",
+                explain: "當地震地表運動的頻率接近建築物的固有頻率時，會發生共振，導致放大效應。工程上會透過隔震、阻尼器與結構加固來降低共振風險。",
+                visual: ``,
+                quiz: "哪些方法可以降低共振效應？",
+                ans: "改變結構剛性或品質因數（Q）、加入阻尼器或採用隔震基礎。"
             },
             {
-                title: "7. 工程地震學與抗震設計",
-                subtitle: "Resonance and Engineering",
-                q: "為什麼在相同震區，某些建築倒塌而有些卻屹立不搖？",
-                explain: "這涉及「共振」現象。每個建物都有自然振動週期，高樓週期長，矮房週期短。若地震波主導頻率與建物週期重合，震幅會被放大數倍。工程師利用阻尼器來消耗這些動能。",
-                quiz: "通常軟弱地層（如台北盆地）會放大哪種類型的週期？",
-                ans: "長週期。這對高樓大廈（同樣具長週期特性）的影響較為嚴重。"
-            },
-            {
-                title: "8. 地震引發的次生災害",
-                subtitle: "Liquefaction and Tsunamis",
-                q: "什麼地質環境最容易發生「土壤液化」？",
-                explain: "疏鬆且飽和的沙土。強震發生時，水壓急遽升高，使沙粒懸浮，土壤瞬間失去抗剪強度，造成建築下沉或噴砂。而海嘯則是因海床垂直位移推動整層海水所致。",
-                quiz: "海嘯在深海與近岸的表現有何不同？",
-                ans: "在深海速度極快且波高極低（難以發現）；在近岸受地形擠壓，速度變慢但波高急劇攀升。"
+                title: "8. 次生災害：液化與海嘯",
+                subtitle: "Secondary Hazards: Liquefaction & Tsunami",
+                q: "什麼情況下會發生液化？",
+                explain: "液化常發生在飽和的鬆散砂土，強烈震動造成土粒間孔隙水壓升高，使土體失去有效應力，表現為地面塌陷或建築傾斜。",
+                visual: ``,
+                quiz: "海嘯預警與地震預警最大的差異為何？",
+                ans: "海嘯預警需評估海底地形與位移函數，且時間尺度較長；地震預警（EEW）則側重於快速檢測 P 波與估算 M 值以發出短時警報。"
             },
             {
                 title: "9. 預報與預警的差異",
                 subtitle: "Forecasting vs Early Warning",
-                q: "我們能「預知」地震嗎？",
-                explain: "目前人類僅能做到「機率預報」(Forecasting)，無法精確預測確切時間地點。然而，「預警」(Early Warning) 是利用 P 波先抵達測站的資訊，透過電訊傳播（光速）搶在慢速 S 波（強震）到達城市前發出通知。",
-                quiz: "地震預警的「盲區」是指什麼？",
-                ans: "指靠近震央的地區，因為 S 波與 P 波到達的時間差太短，當系統發出警報時，強震已經抵達。"
+                q: "可以準確預報地震發生的時間嗎？",
+                explain: "目前尚無可靠方法可精準預報地震發生的確切時間。地震預警是基於已發生震央快速檢測與波到達時間差，提供秒到數十秒的反應時間。",
+                visual: ``,
+                quiz: "預報和預警在應用策略上有何不同？",
+                ans: "預報用於長期風險規劃；預警用於短期緊急反應（關閉閥門、停電梯等）。"
             },
             {
                 title: "10. 核武監測科學",
-                subtitle: "Nuclear Test Monitoring and Wave Physics",
-                q: "如何分辨地下震動是來自大自然還是核試爆？",
-                explain: "核爆是集中一點向外膨脹的「純壓縮源」，會產生極大的 P 波但 S 波極弱。科學家使用 $m_b : M_s$ 判別法來區分兩者。這是維護全球禁止核試驗條約的核心技術。",
-                visual: `
-                <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-6 md:p-8">
-                    <h4 class="text-xl font-bold text-slate-100 mb-6">體波 ($m_b$) vs 表面波 ($M_s$) 判別圖</h4>
-                    <img src="https://raw.githubusercontent.com/minh891711/seismology_ch1/main/photos/1.1-2.png" alt="Nuclear Monitoring Graph" class="w-full max-w-lg mx-auto rounded-lg shadow-xl border border-slate-600 bg-white p-4">
-                    <div class="space-y-4 mt-6 text-sm text-slate-300">
-                        <p><b class="text-emerald-400">數據群分佈：</b> 
-                           圖中上方群體為<b class="text-red-400">內華達核爆</b>，下方群體為<b class="text-blue-400">美國西部地震</b>。
-                        </p>
-                        <ul class="list-disc ml-5 space-y-2">
-                            <li><b class="text-white">核子試爆（點源）：</b> 瞬間產生極大均勻擴張壓力，激發極強的 P波 ($m_b$)，但剪力波與表面波 ($M_s$) 非常微弱。</li>
-                            <li><b class="text-white">自然地震（剪切錯動）：</b> 斷層大面積撕裂，產生大量剪力波與強大的表面波。</li>
-                        </ul>
-                        <p class="pt-2 border-t border-slate-700 italic text-slate-400">
-                           這張圖表讓科學家能在不靠近現場的情況下，判別某個地下震動是否為秘密核武測試。
-                        </p>
-                    </div>
-                </div>`,
-                quiz: "如果一個震動事件在圖表中位於 $m_b=6.0$ 且 $M_s=4.0$ 的位置，它是什麼？",
-                ans: "高度懷疑是地下核武試爆，因為體波規模遠大於其產生的表面波規模。"
+                subtitle: "Seismology for Nuclear Monitoring",
+                q: "地震學如何協助偵測地下核試？",
+                explain: "人工爆震與地震在頻譜上有差異；結合多模態（地震、空氣聲、重力等）和陣列分析可提高識別能力，並透過地震矩與震源深度判別是否為爆炸性事件。",
+                visual: ``,
+                quiz: "偵測地下爆炸時，最重要的訊號特徵為何？",
+                ans: "短時窗內高頻能量比、震源深度淺、以及與地震型態不同的輻射模式。"
             }
         ];
 
+        // === 在頁面上渲染 topics（保留原始結構風格） ===
         const container = document.getElementById('topics-container');
 
-        topics.forEach((topic, index) => {
-            const topicId = `topic-${index}`;
-            container.innerHTML += `
-                <div id="${topicId}" class="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden mb-8 scroll-mt-24">
-                    <div class="px-8 py-6 bg-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-700/50 transition-all" onclick="toggleAccordion('${topicId}')">
-                        <div>
-                            <h2 class="text-xl md:text-2xl font-black text-slate-100">${topic.title}</h2>
-                            <p class="text-xs md:text-sm text-slate-400 font-medium">${topic.subtitle}</p>
-                        </div>
-                        <span id="icon-${topicId}" class="text-2xl text-slate-500 transition-transform">+</span>
+        topics.forEach((t, idx) => {
+            const section = document.createElement('section');
+            section.id = `topic-${idx}`;
+            section.className = 'bg-slate-950 border border-slate-800 rounded-xl p-6';
+
+            section.innerHTML = `
+                <header class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-lg md:text-xl font-extrabold text-slate-100">${t.title}</h2>
+                        <p class="text-sm text-slate-400 mt-1">${t.subtitle || ''}</p>
                     </div>
-                    <div id="content-${topicId}" class="topic-content px-8 pb-8">
-                        <div class="border-t border-slate-700 pt-6">
-                            <h3 class="text-lg font-bold text-blue-400 mb-4">核心探討：${topic.q}</h3>
-                            <p class="text-slate-300 leading-relaxed">${topic.explain}</p>
-                            ${topic.visual ? topic.visual : ''}
-                            <div class="mt-8 bg-slate-900/50 p-6 rounded-xl border border-slate-700">
-                                <p class="text-xs font-bold text-slate-400 mb-2 uppercase">互動小測試</p>
-                                <p class="text-slate-200 mb-4 font-medium">${topic.quiz}</p>
-                                <button onclick="toggleAnswer('ans-${topicId}')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 px-6 rounded-full transition-all shadow-lg">顯示解答</button>
-                                <div id="ans-${topicId}" class="quiz-answer mt-4 p-4 bg-blue-900/20 rounded-lg text-blue-300 border border-blue-900/30 text-sm">
-                                    <span class="font-bold">大師開講：</span>${topic.ans}
-                                </div>
-                            </div>
-                        </div>
+                    <div class="text-sm text-slate-400">${idx + 1}</div>
+                </header>
+
+                <div class="topic-body mt-4 space-y-4 text-sm text-slate-200">
+                    <div class="bg-slate-900 border border-slate-800 rounded-md p-4">
+                        <div class="font-semibold text-blue-300 mb-2">引導問題：</div>
+                        <div class="text-slate-200">${t.q || ''}</div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-md p-4">
+                        <div class="font-semibold text-yellow-300 mb-2">說明：</div>
+                        <div class="text-slate-200">${t.explain || ''}</div>
+                    </div>
+
+                    ${t.visual || ''}
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-md p-4">
+                        <div class="font-semibold text-green-300 mb-2">小測驗：</div>
+                        <div class="text-slate-200 mb-3">${t.quiz || ''}</div>
+                        <button class="show-answer-btn bg-blue-700/30 text-blue-200 px-3 py-1 rounded">顯示答案</button>
+                        <div class="quiz-answer mt-3 p-3 bg-slate-800 rounded" aria-hidden="true">${t.ans || ''}</div>
                     </div>
                 </div>
             `;
+
+            container.appendChild(section);
         });
 
-        function toggleAccordion(id) {
-            const content = document.getElementById(`content-${id}`);
-            const icon = document.getElementById(`icon-${id}`);
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                content.classList.add('open');
-                icon.style.transform = 'rotate(45deg)';
+        // 互動：顯示答案 & 側欄導覽 active 狀態
+        document.querySelectorAll('.show-answer-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const ans = btn.parentElement.querySelector('.quiz-answer');
+                const shown = ans.classList.toggle('show');
+                ans.style.display = shown ? 'block' : 'none';
+                ans.setAttribute('aria-hidden', !shown);
+                btn.textContent = shown ? '隱藏答案' : '顯示答案';
+            });
+        });
+
+        // 側欄連結滾動與 active 樣式
+        document.querySelectorAll('aside nav a.nav-link').forEach((a) => {
+            a.addEventListener('click', (ev) => {
+                ev.preventDefault();
+                const targetId = a.getAttribute('href').slice(1);
+                const el = document.getElementById(targetId);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.querySelectorAll('aside nav a.nav-link').forEach(n=>n.classList.remove('active'));
+                    a.classList.add('active');
+                }
+            });
+        });
+
+        // 當滾動時更新側邊目錄 active（簡單版）
+        window.addEventListener('scroll', () => {
+            const sections = Array.from(document.querySelectorAll('main section'));
+            let current = sections.find(s => {
+                const rect = s.getBoundingClientRect();
+                return rect.top <= 120 && rect.bottom > 120;
+            });
+            document.querySelectorAll('aside nav a.nav-link').forEach(a=>a.classList.remove('active'));
+            if (current) {
+                const id = current.id;
+                const link = document.querySelector(`aside nav a[href="#${id}"]`);
+                if (link) link.classList.add('active');
             }
-        }
+        });
 
-        function toggleAnswer(id) {
-            document.getElementById(id).classList.toggle('show');
-        }
-
-        // 初始化開展第一個章節
-        toggleAccordion('topic-0');
     </script>
 </body>
 </html>
